@@ -1,0 +1,9 @@
+security:
+  oauth2:
+    client:
+      client-id: book-client
+      client-secret: secret
+      scope: read,write
+      auto-approve-scopes: '.*'
+      
+      

@@ -1,0 +1,18 @@
+dependencies {
+    compile 'com.jayway.jsonpath:json-path:2.4.0'
+    compile 'io.lettuce:lettuce-core:5.0.0.RC1'
+    compile("org.springframework.boot:spring-boot-devtools:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.session:spring-session-data-redis:${springSessionVersion}")
+    compile("org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE") {
+         exclude module: 'spring-beans' 
+         exclude module: 'spring-security-core' 
+    }
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testCompile("org.springframework:spring-security-test:${springVersion}")
+}

@@ -1,0 +1,39 @@
+allprojects  {
+  apply plugin: 'maven'
+  apply plugin: 'eclipse'
+
+  group = 'it.discovery'
+}
+
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  ext {
+      springVersion = '5.0.0.BUILD-SNAPSHOT'
+      springSecurityVersion = '5.0.0.BUILD-SNAPSHOT'
+      springBootVersion = '2.0.0.BUILD-SNAPSHOT'
+      springSessionVersion = '2.0.0.BUILD-SNAPSHOT'
+      junitVersion = '5.0.0-RC2';
+
+  } 
+  
+  repositories {
+    mavenLocal()
+    
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+  } 
+
+  dependencies {
+     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+     compile('org.apache.commons:commons-lang3:3.5')
+  }
+
+}
+
+eclipse { 
+	classpath { 
+		downloadSources=true
+}}
