@@ -2,15 +2,14 @@ package it.discovery.controller;
 
 import it.discovery.exception.BookNotFoundException;
 import it.discovery.model.Book;
+import it.discovery.monitoring.GaugeService;
 import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,13 +20,14 @@ public class BookController {
 
     private final BookRepository bookRepository;
 
+    @Autowired
     public BookController(BookRepository bookRepository) { // autowiring will be automatically in Spring 4
         this.bookRepository = bookRepository;
     }
 
     @PostMapping(value = "/save", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Book getSampleBook() {
+    public Book saveBook() {
 
         Book book = new Book();
         book.setId(id);
