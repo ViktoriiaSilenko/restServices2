@@ -1,9 +1,6 @@
 package it.discovery.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +13,8 @@ public class SimpleBookRepository implements BookRepository {
 	private int counter = 0;
 
 	@Override
-	public Book findById(int id) {
-		return books.get(id);
+	public Optional<Book> findById(int id) {
+		return Optional.ofNullable(books.get(id));
 	}
 
 	@Override

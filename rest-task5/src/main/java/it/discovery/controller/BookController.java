@@ -1,5 +1,6 @@
 package it.discovery.controller;
 
+import it.discovery.exception.BookNotFoundException;
 import it.discovery.model.Book;
 import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,7 @@ public class BookController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Book foundBook = bookRepository.findById(id);
-        if (foundBook == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        }
+        Book foundBook = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
 
         return new ResponseEntity<>(foundBook, HttpStatus.OK);
     }
@@ -68,10 +65,8 @@ public class BookController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Book item = bookRepository.findById(id);
-        if (item == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+
         book.setId(id);
         bookRepository.save(book);
 
@@ -87,11 +82,10 @@ public class BookController {
 
         boolean deletedBook = bookRepository.delete(id);
         if (deletedBook == false) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new BookNotFoundException();
 
         }
 
-        //return new ResponseEntity<>(deletedBook, HttpStatus.OK);
         return ResponseEntity.noContent().build();
 
     }
