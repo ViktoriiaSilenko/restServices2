@@ -5,6 +5,8 @@ import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -40,25 +42,58 @@ public class BookController {
     }
 
     @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public Book getById(@PathVariable("id") int id) {
-        return bookRepository.findById(id);
+    public ResponseEntity<Book> getById(@PathVariable("id") int id) {
+        if (id <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Book foundBook = bookRepository.findById(id);
+        if (foundBook == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+
+        return new ResponseEntity<>(foundBook, HttpStatus.OK);
     }
 
     @GetMapping(value = "/get", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<Book> getById() {
+    public List<Book> getAll() {
         return bookRepository.findAll();
     }
 
     @PutMapping("/update/{id}")
-    public void updateBook(@PathVariable int id, @RequestBody Book book) {
+    public ResponseEntity<Book> updateBook(@PathVariable int id, @RequestBody Book book) {
+
+        if(id <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Book item = bookRepository.findById(id);
-        item.setId(id);
+        if (item == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        book.setId(id);
         bookRepository.save(book);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/delete/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public boolean deleteById(@PathVariable("id") int id) {
-        return bookRepository.delete(id);
+    public ResponseEntity<Boolean> deleteById(@PathVariable("id") int id) {
+
+        if (id <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        boolean deletedBook = bookRepository.delete(id);
+        if (deletedBook == false) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+
+        //return new ResponseEntity<>(deletedBook, HttpStatus.OK);
+        return ResponseEntity.noContent().build();
+
     }
 
 
