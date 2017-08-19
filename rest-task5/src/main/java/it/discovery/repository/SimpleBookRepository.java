@@ -3,7 +3,7 @@ package it.discovery.repository;
 import java.util.*;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.boot.actuate.metrics.CounterService;
+
 import org.springframework.boot.actuate.metrics.GaugeService;
 
 import it.discovery.model.Book;
@@ -16,12 +16,8 @@ public class SimpleBookRepository implements BookRepository {
 
 	private final GaugeService gaugeService;
 
-	private final CounterService counterService;
-
-	public SimpleBookRepository(GaugeService gaugeService,
-								CounterService counterService) {
+	public SimpleBookRepository(GaugeService gaugeService) {
 		this.gaugeService = gaugeService;
-		this.counterService = counterService;
 	}
 
 	@Override
@@ -45,8 +41,8 @@ public class SimpleBookRepository implements BookRepository {
 			books.put(book.getId(), book);
 			System.out.println("*** Book with id=" + book.getId() + " was updated");
 		}
-		counterService.increment("book.count");
-		//gaugeService.submit("book.count", counter);
+
+		gaugeService.submit("book.count", books.size());
 	}
 
 	@Override
@@ -58,8 +54,7 @@ public class SimpleBookRepository implements BookRepository {
 		books.remove(id);
 		System.out.println("*** Book with id=" + id + " was deleted");
 
-		counterService.decrement("book.count");
-		gaugeService.submit("book.count", counter);
+		gaugeService.submit("book.count", books.size());
 		return true;
 	}
 
