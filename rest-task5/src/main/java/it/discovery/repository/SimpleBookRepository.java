@@ -45,7 +45,8 @@ public class SimpleBookRepository implements BookRepository {
 			books.put(book.getId(), book);
 			System.out.println("*** Book with id=" + book.getId() + " was updated");
 		}
-		gaugeService.submit("book.count", this.books.size());
+		counterService.increment("book.count");
+		//gaugeService.submit("book.count", counter);
 	}
 
 	@Override
@@ -57,7 +58,8 @@ public class SimpleBookRepository implements BookRepository {
 		books.remove(id);
 		System.out.println("*** Book with id=" + id + " was deleted");
 
-		gaugeService.submit("book.count", this.books.size());
+		counterService.decrement("book.count");
+		gaugeService.submit("book.count", counter);
 		return true;
 	}
 
