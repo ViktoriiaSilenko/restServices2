@@ -15,7 +15,7 @@ public class BookController {
 
     @RequestMapping(value = "/newBook", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Book getCurrentLocalDate() {
+    public Book getSampleBook() {
 
         Book book = new Book();
         book.setId(1);
