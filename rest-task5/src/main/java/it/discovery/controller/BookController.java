@@ -16,11 +16,13 @@ public class BookController {
 
     private static int id = 1;
 
-    @Autowired
-    BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    @RequestMapping(value = "/save", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
-        method = RequestMethod.POST)
+    public BookController(BookRepository bookRepository) { // autowiring will be automatically in Spring 4
+        this.bookRepository = bookRepository;
+    }
+
+    @PostMapping(value = "/save", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Book getSampleBook() {
 
@@ -37,18 +39,24 @@ public class BookController {
         return book;
     }
 
-    @RequestMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     public Book getById(@PathVariable("id") int id) {
         return bookRepository.findById(id);
     }
 
-    @RequestMapping(value = "/get", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/get", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<Book> getById() {
         return bookRepository.findAll();
     }
 
-    @RequestMapping(value = "/delete/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
-            method = RequestMethod.DELETE)
+    @PutMapping("/update/{id}")
+    public void updateBook(@PathVariable int id, @RequestBody Book book) {
+        Book item = bookRepository.findById(id);
+        item.setId(id);
+        bookRepository.save(book);
+    }
+
+    @DeleteMapping(value = "/delete/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     public boolean deleteById(@PathVariable("id") int id) {
         return bookRepository.delete(id);
     }
