@@ -4,6 +4,8 @@ import it.discovery.exception.BookNotFoundException;
 import it.discovery.model.Book;
 import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,6 +52,7 @@ public class BookController {
         return book;
     }
 
+    @Cacheable("books")
     @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     public Resource<ResponseEntity<Book>> getById(@PathVariable("id") int id) {
 
@@ -100,6 +103,7 @@ public class BookController {
                 .collect(Collectors.toList());
     }*/
 
+    @Cacheable("books")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Resource<Book>> getAll() {
         List<Book> books = bookRepository.findAll();
@@ -121,6 +125,12 @@ public class BookController {
         }
 
         return resources;
+    }
+
+    @CacheEvict(cacheNames = "books", allEntries = true)
+    @GetMapping("/clear")
+    public void clearCache() {
+
     }
 
 
