@@ -65,7 +65,7 @@ public class BookControllerTest {
 
         assertAll(() -> result.andExpect(status().isOk()),
                   () -> result.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)),
-                  () -> result.andExpect(jsonPath("$.name", Matchers.equalTo("Java"))));
+                  () -> result.andExpect(jsonPath("$.[0].name", Matchers.equalTo("Java"))));
 
     }
 

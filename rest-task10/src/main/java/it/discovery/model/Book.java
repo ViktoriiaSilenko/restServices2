@@ -7,18 +7,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Book {
 	private int id;
 
     @JsonProperty(value = "bookAuthor")
-    @XmlElement(name="bookAuthor")
 	private String author;
 
 	private String name;
 	
 	private int year;
+
+	private boolean rented;
 
 	public int getId() {
 		return id;
@@ -50,5 +49,13 @@ public class Book {
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+	public boolean isRented() {
+		return rented;
+	}
+
+	public void setRented(boolean rented) {
+		this.rented = rented;
 	}
 }

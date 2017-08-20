@@ -1,7 +1,11 @@
 package it.discovery.bootstrap;
 
 import it.discovery.model.Book;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +27,12 @@ public class BookRestClient {
 
     public URI saveBook(Book book) {
         return restTemplate.postForLocation("http://localhost:9000/book/save", book);
+        /*MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
+
+        HttpEntity<Book> request = new HttpEntity<>(book, map);
+
+        return restTemplate.postForLocation("http://localhost:9000/book/save", request);*/
     }
 
     public void updateBook(Book book, int id) {
