@@ -1,13 +1,10 @@
 package it.discovery.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import it.discovery.model.Book;
+import org.springframework.boot.actuate.metrics.GaugeService;
 import org.springframework.stereotype.Repository;
 
-import it.discovery.model.Book;
+import java.util.*;
 
 @Repository
 public class SimpleBookRepository implements BookRepository {
@@ -15,9 +12,15 @@ public class SimpleBookRepository implements BookRepository {
 
 	private int counter = 0;
 
+	private final GaugeService gaugeService;
+
+	public SimpleBookRepository(GaugeService gaugeService) {
+		this.gaugeService = gaugeService;
+	}
+
 	@Override
-	public Book findById(int id) {
-		return books.get(id);
+	public Optional<Book> findById(int id) {
+		return Optional.ofNullable(books.get(id));
 	}
 
 	@Override
@@ -36,6 +39,8 @@ public class SimpleBookRepository implements BookRepository {
 			books.put(book.getId(), book);
 			System.out.println("*** Book with id=" + book.getId() + " was updated");
 		}
+
+		gaugeService.submit("book.count", books.size());
 	}
 
 	@Override
@@ -46,6 +51,8 @@ public class SimpleBookRepository implements BookRepository {
 
 		books.remove(id);
 		System.out.println("*** Book with id=" + id + " was deleted");
+
+		gaugeService.submit("book.count", books.size());
 		return true;
 	}
 
