@@ -15,8 +15,6 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
-    private static int id = 1;
-
     private final BookRepository bookRepository;
 
     @Autowired
@@ -26,17 +24,9 @@ public class BookController {
 
     @PostMapping(value = "/save", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Book saveBook() {
-
-        Book book = new Book();
-        book.setId(id);
-        book.setName("Test name");
-        book.setYear(2017);
-        book.setAuthor("Test author");
+    public Book saveBook(Book book) {
 
         bookRepository.save(book);
-
-        id++;
 
         return book;
     }
