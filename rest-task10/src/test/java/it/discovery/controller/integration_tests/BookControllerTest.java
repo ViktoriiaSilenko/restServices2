@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,6 +31,7 @@ public class BookControllerTest {
     private  MockMvc mockMvc;
 
     @Test
+    @WithMockUser("admin")
     public void testGetAll_Empty_storage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/book/get"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -38,6 +40,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser("admin")
     public void testGetById_Empty_storage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/book/get/1"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())

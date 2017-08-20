@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -48,6 +49,7 @@ public class BookControllerTest {
 
 
     @Test
+    @WithMockUser("admin")
     public void testGetAll_Storage_is_not_empty() throws Exception {
         ResultActions result = mockMvc.perform(get("/book/get"));
 
@@ -59,17 +61,20 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser("admin")
     public void testFindById_book_exists() throws Exception {
 
         ResultActions result = mockMvc.perform(get("/book/get/1"));
+        System.out.println(content().string(""));
 
         assertAll(() -> result.andExpect(status().isOk()),
                   () -> result.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)),
-                  () -> result.andExpect(jsonPath("$.[0].name", Matchers.equalTo("Java"))));
+                  () -> result.andExpect(jsonPath("$.name", Matchers.equalTo("Java"))));
 
     }
 
     @Test
+    @WithMockUser("admin")
     public void findBookById_InvalidId_NotFoundReturned() throws Exception {
         ResultActions result = mockMvc.perform(get("/book/get/2"));
 

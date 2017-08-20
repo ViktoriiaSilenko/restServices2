@@ -1,12 +1,8 @@
-package it.discovery.bootstrap;
+package it.discovery.client;
 
 import it.discovery.model.Book;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -15,7 +11,7 @@ import java.util.List;
 
 public class BookRestClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final TestRestTemplate restTemplate = new TestRestTemplate("admin", "admin");
 
     public List<Book> getAll() {
         return (List<Book>) restTemplate.getForObject("http://localhost:9000/book/get", List.class);
