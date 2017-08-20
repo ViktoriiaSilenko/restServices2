@@ -41,8 +41,8 @@ public class BookController {
 
     @CacheResult(cacheName = "books")
     @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<Resource<Book>> getById(@PathVariable("id") int id) {
-   // public ResponseEntity<Book> getById(@PathVariable("id") int id) {
+    //public ResponseEntity<Resource<Book>> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Book> getById(@PathVariable("id") int id) {
 
         /*if (id <= 0) {
             ResponseEntity<Resource<Book>> bookBadRequest = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -75,9 +75,9 @@ public class BookController {
 
         return responce;*/
 
-        /*Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
 
-        return new ResponseEntity<>(book, HttpStatus.OK);*/
+        return new ResponseEntity<>(book, HttpStatus.OK);
 
     }
 
