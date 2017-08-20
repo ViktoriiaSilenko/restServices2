@@ -8,6 +8,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.cache.annotation.CacheRemove;
@@ -95,7 +96,8 @@ public class BookController {
                 .collect(Collectors.toList());
     }*/
 
-  @CacheResult(cacheName = "books")
+    @Secured("ROLE_ADMIN")
+    @CacheResult(cacheName = "books")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Resource<Book>> getAll() {
         List<Book> books = bookRepository.findAll();
@@ -155,6 +157,7 @@ public class BookController {
     }
 
     @DeleteMapping(value = "/delete/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Boolean> deleteById(@PathVariable("id") int id) {
 
         if (id <= 0) {
