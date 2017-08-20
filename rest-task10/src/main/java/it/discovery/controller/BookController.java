@@ -41,7 +41,7 @@ public class BookController {
     }
 
     @CacheResult(cacheName = "books")
-    @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     //public ResponseEntity<Resource<Book>> getById(@PathVariable("id") int id) {
     public ResponseEntity<Book> getById(@PathVariable("id") int id) {
 
