@@ -4,33 +4,20 @@ import it.discovery.exception.BookNotFoundException;
 import it.discovery.model.Book;
 import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.cache.annotation.CacheRemove;
+import javax.cache.annotation.CacheRemoveAll;
+import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-import it.discovery.exception.BookNotFoundException;
-import it.discovery.model.Book;
-import it.discovery.repository.BookRepository;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/book")
@@ -52,15 +39,15 @@ public class BookController {
         return book;
     }
 
-    @Cacheable("books")
+    @CacheResult(cacheName = "books")
     @GetMapping(value = "/get/{id}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public Resource<ResponseEntity<Book>> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Resource<Book>> getById(@PathVariable("id") int id) {
+   // public ResponseEntity<Book> getById(@PathVariable("id") int id) {
 
-        if (id <= 0) {
-            ResponseEntity<Book> bookBadRequest = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        /*if (id <= 0) {
+            ResponseEntity<Resource<Book>> bookBadRequest = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-            Resource<ResponseEntity<Book>> resource = new Resource<>(bookBadRequest);
-            resource.add(linkTo(methodOn(BookController.class)
+            bookBadRequest.add(linkTo(methodOn(BookController.class)
                     .getById(bookBadRequest.getBody().getId())).withSelfRel());
 
             if(!bookBadRequest.getBody().isRented()) {
@@ -70,26 +57,31 @@ public class BookController {
 
             return resource;
 
-        }
+        }*/
 
+        /*  !!!
         Book foundBook = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
 
-        ResponseEntity<Book> book = new ResponseEntity<>(foundBook, HttpStatus.OK);
+        Resource<Book> resource = new Resource<Book>(foundBook);
 
-        Resource<ResponseEntity<Book>> resource = new Resource<>(book);
+        ResponseEntity<Resource<Book>> responce =  ResponseEntity.ok(resource);
         resource.add(linkTo(methodOn(BookController.class)
-                .getById(book.getBody().getId())).withSelfRel());
+                .getById(foundBook.getId())).withSelfRel());
 
         if (!foundBook.isRented()) {
             resource.add(linkTo(methodOn(BookController.class)
-                    .rentBook(book.getBody().getId())).withRel("rent"));
+                    .rentBook(foundBook.getId())).withRel("rent"));
         }
 
-        return resource;
+        return responce;*/
+
+        /*Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+
+        return new ResponseEntity<>(book, HttpStatus.OK);*/
 
     }
 
-    /*@GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+   /* @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Resource<Book>> findBooks() {
         return bookRepository.findAll().stream().map(Resource::new)
                 .peek(item ->
@@ -103,12 +95,13 @@ public class BookController {
                 .collect(Collectors.toList());
     }*/
 
-    @Cacheable("books")
+  @CacheResult(cacheName = "books")
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<Resource<Book>> getAll() {
         List<Book> books = bookRepository.findAll();
 
         List<Resource<Book>> resources = new ArrayList<>();
+
         for (Book book : books) {
             Resource<Book> resource = new Resource<>(book);
 
@@ -127,12 +120,11 @@ public class BookController {
         return resources;
     }
 
-    @CacheEvict(cacheNames = "books", allEntries = true)
+    @CacheRemove(cacheName = "books")
     @GetMapping("/clear")
     public void clearCache() {
 
     }
-
 
 
     @PutMapping("/update/{id}")
